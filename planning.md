@@ -9,7 +9,7 @@
 
 ## Domain
 
-<!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
+This system covers unofficial student knowledge, opinions, and reviews about campus dining at Cornell University. This information is highly valuable because official university websites only provide menus, prices, and hours, whereas students actually need to know realistic wait times, comparative food quality across different dining halls, and the best strategies for maximizing their meal plans.
 
 ---
 
@@ -20,16 +20,16 @@
 
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | Reddit Thread | Dining Hall Rankings & Timing analysis | https://www.reddit.com/r/Cornell/comments/124z4ai/dining_hall_rankings_time/ |
+| 2 | Yelp Page | Toni Morrison Dining Hall customer reviews | https://www.yelp.com/biz/toni-morrison-dining-hall-ithaca |
+| 3 | Yelp Page | Okenshields historical reviews and student opinions | https://www.yelp.com/biz/okenshields-ithaca |
+| 4 | Reddit Thread | South Campus meal options, City Bucks vs. Collegetown | https://www.reddit.com/r/Cornell/comments/1sn7r66/south_campus_meal_plan_city_bucks_college_town/ |
+| 5 | Reddit Thread | Advice on finding cheap food on Central Campus | https://www.reddit.com/r/Cornell/comments/1n0bh9z/cheap_central_campus_food/ |
+| 6 | Reddit Thread | Logistics and ethics of sneaking food out of dining halls | https://www.reddit.com/r/Cornell/comments/1m9m70c/taking_food_out_of_dining_halls/ |
+| 7 | Reddit Thread | Realities and student frustrations over operational hours | https://www.reddit.com/r/Cornell/comments/1dtjq04/dining_hall_hours/ |
+| 8 | The Cornell Daily Sun | Unofficial student op-ed defending Okenshields' reputation | https://www.cornellsun.com/article/2026/03/a-foodie-s-homage-to-okenshields-why-it-deserves-more-love |
+| 9 | Reddit Thread | Vegan/Vegetarian community feedback on dining plan options | https://www.reddit.com/r/Cornell/comments/1f18lfs/vegansvegetarians_what_are_you_doing_about_the/ |
+| 10 | Yelp Page | The Terrace Restaurant campus cafe crowd reviews | https://www.yelp.com/biz/the-terrace-restaurant-ithaca |
 
 ---
 
