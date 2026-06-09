@@ -40,11 +40,11 @@ This system covers unofficial student knowledge, opinions, and reviews about cam
      numbers fit the structure of your documents.
      A review-heavy corpus warrants different chunking than a long FAQ. -->
 
-**Chunk size:**
+**Chunk size:** 400 characters
 
-**Overlap:**
+**Overlap:** 80 characters
 
-**Reasoning:**
+**Reasoning:** Because the dataset features messy text collections (Reddit comment chains, Yelp reviews, and a short student news article), the structural boundaries vary significantly. Review-style text and individual comments are packed with concise opinions; larger chunks would dilute specific nuances. An 80-character overlap prevents critical context from being broken mid-sentence when a student shifts topics from food options to layout dynamics.
 
 ---
 
@@ -56,11 +56,11 @@ This system covers unofficial student knowledge, opinions, and reviews about cam
      would you weigh in choosing a different embedding model — context length, multilingual
      support, accuracy on domain-specific text, latency? -->
 
-**Embedding model:**
+**Embedding model:** `all-MiniLM-L6-v2` via `sentence-transformers`
 
-**Top-k:**
+**Top-k:** 4 chunks
 
-**Production tradeoff reflection:**
+**Production tradeoff reflection:** If deploying this for a large volume of actual production users without financial guardrails, we would prioritize switching to an enterprise API embedding model (like OpenAI `text-embedding-3-small`). This would grant us larger input token context lengths and better baseline semantic accuracy on specialized vocabulary, though at the expense of introducing persistent API dependency, recurring costs, and network latency over our current lightweight, local solution.
 
 ---
 
@@ -73,11 +73,11 @@ This system covers unofficial student knowledge, opinions, and reviews about cam
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| 1 | What is the general consensus on the quality of Toni Morrison Dining Hall? | It is highly rated by students for variety and quality, though peak hours can be quite crowded. |
+| 2 | Is it permissible or common practice for students to sneak food out of Cornell dining halls? | Officially it is against policy, but students heavily debate the logistics and general ethics of taking small items out in containers. |
+| 3 | Why do some students defend Okenshields despite its reputation? | It offers immense nostalgic value, exceptional central campus proximity, and dependable staple items like the stir-fry. |
+| 4 | What are some recommendations for finding cheap food options on Central Campus? | Students suggest specific hidden cafes, ordering à la carte items, or prioritizing retail spots over swiping into traditional dining halls. |
+| 5 | Does the system know about the meal options at operational hours past midnight? | No, the source documents focus on regular hours and standard schedules, not midnight alternatives. (Out-of-scope control question). |
 
 ---
 
@@ -87,9 +87,8 @@ This system covers unofficial student knowledge, opinions, and reviews about cam
      Consider: noisy or inconsistent documents, missing source attribution, off-topic
      retrieval, chunks that split key information across boundaries. -->
 
-1.
-
-2.
+1. **Noisy Forum Boilerplate:** Reddit comment threads feature bot automation language, hyperlinked text formatting, and deleted text tags that risk muddying the downstream embedding generation.
+2. **Sarcasm and Campus Dialect:** High usage of heavy sarcasm and localized slang phrases ("Okies", "West campus lines", "swipes") might challenge baseline context alignment if similarities aren't tight.
 
 ---
 
@@ -100,6 +99,16 @@ This system covers unofficial student knowledge, opinions, and reviews about cam
      Label each stage with the tool or library you're using.
      You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
      You'll use this diagram as context when prompting AI tools to implement each stage. -->
+
+```mermaid
+graph TD
+    A[Document Ingestion: Local Text Files] --> B[Chunking Strategy: Recursive Character Splitting]
+    B --> C[Embedding Stage: sentence-transformers/all-MiniLM-L6-v2]
+    C --> D[Vector Database: ChromaDB Local Store]
+    E[User Query Box] --> F[Semantic Search Retrieval: Top-4 Matches]
+    D --> F
+    F --> G[Grounded Context Generation: Groq Llama-3.3-70b-versatile]
+    G --> H[Final Web App UI: Gradio Layout with Source Citations]
 
 ---
 
@@ -115,8 +124,11 @@ This system covers unofficial student knowledge, opinions, and reviews about cam
      "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
      with my specified chunk size and overlap" is a plan. -->
 
-**Milestone 3 — Ingestion and chunking:**
+**Milestone 3 — Ingestion and chunking:** 
+I will provide my Documents and Chunking Strategy sections to Gemini. I expect it to write a clean ingest.py processing script using regular expressions to clean out forum boilerplate (like web links) and slice raw texts into 400-character blocks with an 80-character overlap. I will verify it by printing out exactly 5 generated blocks to check readability.
 
-**Milestone 4 — Embedding and retrieval:**
+**Milestone 4 — Embedding and retrieval:** 
+I will feed my Retrieval Approach section and the architecture flow to the AI tool to write an embedding script leveraging sentence-transformers and local ChromaDB logic. I will test the output by running 3 validation queries directly through my terminal to verify that the returned chunks are relevant.
 
 **Milestone 5 — Generation and interface:**
+I will prompt the AI with the project’s strict grounding requirements alongside the sample Gradio layout instructions. I want it to code an app wrapper where the prompt constraints strictly prohibit model hallucinations and ensure the source dictionary maps clean metadata labels to the interface.
