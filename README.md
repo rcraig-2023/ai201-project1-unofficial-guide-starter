@@ -1,162 +1,97 @@
 # The Unofficial Guide — Project 1
 
-> **How to use this template:**
-> Complete each section *after* you've built and tested the corresponding part of your system.
-> Do not write placeholder text — if a section isn't done yet, leave it blank and come back.
-> Every section below is required for submission. One-liners will not receive full credit.
-
----
-
 ## Domain
-
-<!-- What topic or category of knowledge does your system cover?
-     Why is this knowledge valuable, and why is it hard to find through official channels?
-     Example: "Student reviews of CS professors at [university] — useful because official
-     course descriptions don't reflect teaching style, exam difficulty, or workload." -->
+This system covers unofficial student knowledge, opinions, and reviews about campus dining at Cornell University. This information is highly valuable because official university websites only provide menus, prices, and hours, whereas students actually need to know realistic wait times, comparative food quality across different dining halls, and the best strategies for maximizing their meal plans on a budget.
 
 ---
 
 ## Document Sources
 
-<!-- List every source you collected documents from.
-     Be specific: include URLs, subreddit names, forum thread titles, or file names.
-     Aim for variety — sources that together cover different subtopics or perspectives. -->
-
 | # | Source | Type | URL or file path |
 |---|--------|------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | Dining Hall Rankings & Timing | Reddit | https://www.reddit.com/r/Cornell/comments/124z4ai/dining_hall_rankings_time/ |
+| 2 | Toni Morrison Dining Hall | Yelp | https://www.yelp.com/biz/toni-morrison-dining-hall-ithaca |
+| 3 | Okenshields Reviews | Yelp | https://www.yelp.com/biz/okenshields-ithaca |
+| 4 | South Campus Meal Plan Options | Reddit | https://www.reddit.com/r/Cornell/comments/1sn7r66/south_campus_meal_plan_city_bucks_college_town/ |
+| 5 | Cheap Central Campus Food | Reddit | https://www.reddit.com/r/Cornell/comments/1n0bh9z/cheap_central_campus_food/ |
+| 6 | Taking Food Out of Dining Halls | Reddit | https://www.reddit.com/r/Cornell/comments/1m9m70c/taking_food_out_of_dining_halls/ |
+| 7 | Dining Hall Hours | Reddit | https://www.reddit.com/r/Cornell/comments/1dtjq04/dining_hall_hours/ |
+| 8 | Homage to Okenshields | The Cornell Daily Sun | https://www.cornellsun.com/article/2026/03/a-foodie-s-homage-to-okenshields-why-it-deserves-more-love |
+| 9 | Vegan/Vegetarian Dining | Reddit | https://www.reddit.com/r/Cornell/comments/1f18lfs/vegansvegetarians_what_are_you_doing_about_the/ |
+| 10 | The Terrace Restaurant | Yelp | https://www.yelp.com/biz/the-terrace-restaurant-ithaca |
 
 ---
 
 ## Chunking Strategy
 
-<!-- Describe your chunking approach with enough specificity that someone else could reproduce it.
-     Include:
-     - Chunk size (characters or tokens) and why that size fits your documents
-     - Overlap size and why (or why not) you used overlap
-     - Any preprocessing you did before chunking (e.g., stripping HTML, removing headers)
-     - What your final chunk count was across all documents -->
+**Chunk size:** 400 characters
 
-**Chunk size:**
+**Overlap:** 80 characters
 
-**Overlap:**
+**Why these choices fit your documents:** Because the corpus is predominantly made up of informal text (Reddit comments, Yelp reviews), the structural boundaries are highly irregular. A 400-character size ensures that concise student opinions are not diluted by unrelated surrounding text. An 80-character overlap ensures that context isn't severed mid-sentence when a student transitions between topics. Before chunking, the text was preprocessed using regular expressions to strip out markdown links, URLs, and excessive whitespace. Ad copy was also manually scrubbed.
 
-**Why these choices fit your documents:**
-
-**Final chunk count:**
+**Final chunk count:** 147 chunks.
 
 ---
 
 ## Embedding Model
 
-<!-- Name the embedding model you used and explain your choice.
-     Then answer: if you were deploying this system for real users and cost wasn't a constraint,
-     what tradeoffs would you weigh in choosing a different model?
-     Consider: context length limits, multilingual support, accuracy on domain-specific text,
-     latency, and local vs. API-hosted. -->
+**Model used:** `all-MiniLM-L6-v2` via `sentence-transformers`.
 
-**Model used:**
-
-**Production tradeoff reflection:**
+**Production tradeoff reflection:** If deploying this system for real users where cost was not a constraint, I would weigh switching to an enterprise model like OpenAI's `text-embedding-3-small`. This would allow for a much larger context window and better baseline accuracy for localized campus slang. However, this would introduce persistent API costs, network latency, and a dependency on external services compared to the current free, local, and incredibly fast `MiniLM` model.
 
 ---
 
 ## Grounded Generation
 
-<!-- Explain how your system enforces grounding — how does it prevent the LLM from answering
-     beyond the retrieved documents?
-     Describe both your system prompt (what instruction you gave the model) and any structural
-     choices (e.g., how you formatted the context, whether you filtered low-relevance chunks).
-     Do not just say "I told it to use the documents" — show the actual instruction or explain
-     the mechanism. -->
+**System prompt grounding instruction:** 
+"You are an assistant for answering student questions about Cornell campus dining. You must answer the user's question using ONLY the provided context below. If the answer cannot be found in the context, explicitly say 'I don't have enough information on that.' Do NOT use your general knowledge. Always cite your sources in your response by referencing the Document name (e.g., 'According to source_2.txt...')." Furthermore, the LLM temperature was set to 0.1 to eliminate creative hallucinations.
 
-**System prompt grounding instruction:**
-
-**How source attribution is surfaced in the response:**
+**How source attribution is surfaced in the response:** 
+The UI application dynamically loops through the retrieved chunks, extracts the unique `source` metadata from each dictionary, and visually appends them as a bulleted list in a dedicated "Retrieved From" sidebar column in the Gradio web interface.
 
 ---
 
 ## Evaluation Report
 
-<!-- Run your 5 test questions from planning.md through your system and record the results.
-     Be honest — a partially accurate or inaccurate result that you explain well is more
-     valuable than a suspiciously perfect result. -->
-
 | # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
 |---|----------|-----------------|------------------------------|-------------------|-------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
-
-**Retrieval quality:** Relevant / Partially relevant / Off-target  
-**Response accuracy:** Accurate / Partially accurate / Inaccurate
+| 1 | What is the general consensus on the quality of Toni Morrison Dining Hall? | Highly rated for variety/quality, crowded at peak hours. | Positive consensus, 3.8/5 rating, far better than older halls, highly recommended. | Relevant | Partially accurate (missed the crowdedness aspect) |
+| 2 | Is it permissible or common practice to sneak food out of dining halls? | Officially against policy, but students debate logistics of taking small items. | Common practice but not permitted. A "noble tradition" of hiding items like pizza in cups. | Relevant | Accurate |
+| 3 | Why do some students defend Okenshields despite its reputation? | Nostalgic value, central campus proximity, and dependable staples. | Defended for its convenience, wide selection, predictability, and comforting soups. | Relevant | Partially accurate |
+| 4 | What are some recommendations for finding cheap food options on Central Campus? | Specific hidden cafes, à la carte spots, prioritizing retail over dining halls. | Retrieved chunks about Aldi/Wegmans. LLM stated it did not have enough info for Central Campus specific hacks. | Off-target | Inaccurate |
+| 5 | Does the system know about the meal options at operational hours past midnight? | No, focus is on regular hours. (Control question). | Noted 7-Eleven is 24/7, but explicitly stated it lacks info on dining halls past midnight. | Relevant | Accurate |
 
 ---
 
 ## Failure Case Analysis
 
-<!-- Identify at least one question where retrieval or generation did not work as expected.
-     Write a specific explanation of *why* it failed, tied to a part of the pipeline.
+**Question that failed:** What are some recommendations for finding cheap food options on Central Campus?
 
-     "The answer was wrong" is not an explanation.
+**What the system returned:** The system retrieved chunks mentioning off-campus grocery stores (Aldi, Wegmans) and general meal prep, but missed the chunks specifically detailing Central Campus hacks. Consequently, the LLM accurately adhered to its grounding constraints and stated: "I don't have enough information on specific cheap food options on Central Campus from the provided context."
 
-     "The relevant information was split across a chunk boundary, so retrieval returned
-     only half the context — the model didn't have enough to answer correctly" is an explanation.
+**Root cause (tied to a specific pipeline stage):** This was a **retrieval failure** during the embedding semantic search stage. The phrase "cheap food options" heavily matched with chunks discussing extreme budget eating (like grocery shopping at Aldi) rather than chunks that contained the exact keyword "Central Campus". Because semantic search focuses on overall meaning rather than strict keyword matching, the geographical constraint of the query was overpowered by the budgetary constraint.
 
-     "The embedding model treated the professor's nickname as out-of-vocabulary and returned
-     results from an unrelated review" is an explanation. -->
-
-**Question that failed:**
-
-**What the system returned:**
-
-**Root cause (tied to a specific pipeline stage):**
-
-**What you would change to fix it:**
+**What you would change to fix it:** I would implement a Hybrid Search approach (combining semantic search with a BM25 keyword search). This would ensure that exact keywords like "Central Campus" carry heavy weight during retrieval, forcing the system to pull chunks that are both semantically related to budget eating AND explicitly located in the right area.
 
 ---
 
 ## Spec Reflection
 
-<!-- Reflect on how planning.md shaped your implementation.
-     Answer both questions with at least 2–3 sentences each. -->
+**One way the spec helped you during implementation:** Writing the spec beforehand forced me to deliberately choose my chunk size (400 characters) based on the actual formatting of Reddit reviews, rather than blindly guessing during coding. It gave me a clear benchmark to test my `ingest.py` script against to ensure the data was dense enough for semantic search.
 
-**One way the spec helped you during implementation:**
-
-**One way your implementation diverged from the spec, and why:**
+**One way your implementation diverged from the spec, and why:** My original spec anticipated that noisy forum boilerplate (like markdown links and URLs) would be a challenge for the embeddings. To solve this, I diverged slightly by adding a dedicated regex cleaning function inside my ingestion script to completely strip out URLs and Wayfair ad copy before the chunking stage even occurred.
 
 ---
 
 ## AI Usage
 
-<!-- Describe at least 2 specific instances where you used an AI tool during this project.
-     For each: what did you give the AI as input, what did it produce, and what did you
-     change, override, or direct differently?
-
-     "I used Claude to help me code" is not sufficient.
-     "I gave Claude my Chunking Strategy section from planning.md and asked it to implement
-     chunk_text(). It returned a function using a fixed character split. I overrode the
-     chunk size from 500 to 200 because my documents are short reviews, not long guides." -->
-
 **Instance 1**
-
-- *What I gave the AI:*
-- *What it produced:*
-- *What I changed or overrode:*
+- *What I gave the AI:* I provided Gemini with my raw `Documents` table and my specified `Chunking Strategy` (400 size, 80 overlap) from my `planning.md` file.
+- *What it produced:* It produced a fully functional Python script (`ingest.py`) that utilized regex to strip out links and a custom chunking loop to divide the text and attach metadata.
+- *What I changed or overrode:* I had to manually intervene and scrub the raw `.txt` files when the script chunked ads that were in Reddit threads.
 
 **Instance 2**
-
-- *What I gave the AI:*
-- *What it produced:*
-- *What I changed or overrode:*
+- *What I gave the AI:* I asked Gemini for help debugging a Git authentication error (`fatal: Authentication failed`) when trying to push my first milestone commit from my Mac terminal.
+- *What it produced:* It explained that GitHub deprecated password authentication and provided a step-by-step guide to generating a Personal Access Token (PAT) and injecting it into the terminal.
+- *What I changed or overrode:* I directly followed the instructions to adjust my remote URL to bypass the Mac Keychain, which successfully allowed me to push the remaining milestones to my repository.
